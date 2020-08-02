@@ -1,16 +1,13 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+//package codeforces;
+
+import java.io.*;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class cFTemplate {
+public class RoundTableKnights {
 
     static BiFunction<Integer, Integer, Integer> ADD = (x, y) -> (x + y);
 
@@ -30,6 +27,36 @@ public class cFTemplate {
     }
 
     static void solve() {
+        int n = in.nextInt();
+        int[] input = new int[n];
+        for (int i = 0; i < n; i++)
+            input[i] = in.nextInt();
+
+        for(int len = 1; len <= n/3; len++) {
+            if(n % len != 0) continue;
+
+            if (can(input, len)) {
+                out.print("YES");
+                return;
+            }
+        }
+
+        out.print("NO");
+    }
+
+    static boolean can(int[] a, int k) {
+        if(a.length/k<=2)
+            return false;
+        for(int i = 0; i<k; i++) {
+            boolean b = true;
+            for(int j = i; j < a.length; j+=k) {
+                if(a[j]==0)
+                    b = false;
+            }
+            if(b)
+                return true;
+        }
+        return false;
     }
 
     static void debug(Object... args) {

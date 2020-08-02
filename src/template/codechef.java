@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.StringTokenizer;
 
 
-public class codechefTemplate {
+public class codechef {
 
     public static void main(String[] args) {
         InputStream inputStream = System.in;
