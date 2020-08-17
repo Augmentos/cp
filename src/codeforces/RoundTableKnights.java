@@ -1,4 +1,4 @@
-//package codeforces;
+package codeforces;
 
 import java.io.*;
 import java.util.Comparator;
@@ -28,9 +28,7 @@ public class RoundTableKnights {
 
     static void solve() {
         int n = in.nextInt();
-        int[] input = new int[n];
-        for (int i = 0; i < n; i++)
-            input[i] = in.nextInt();
+        int[] input = in.readAllInts(n);
 
         for(int len = 1; len <= n/3; len++) {
             if(n % len != 0) continue;
@@ -50,8 +48,10 @@ public class RoundTableKnights {
         for(int i = 0; i<k; i++) {
             boolean b = true;
             for(int j = i; j < a.length; j+=k) {
-                if(a[j]==0)
+                if(a[j]==0) {
                     b = false;
+                    break;
+                }
             }
             if(b)
                 return true;

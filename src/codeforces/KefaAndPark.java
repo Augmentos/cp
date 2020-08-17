@@ -1,13 +1,13 @@
-package codeforces;
+//package codeforces;
+
+import org.omg.CORBA.INTERNAL;
 
 import java.io.*;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class Trains {
+public class KefaAndPark {
 
     static BiFunction<Integer, Integer, Integer> ADD = (x, y) -> (x + y);
 
@@ -22,41 +22,60 @@ public class Trains {
             solve();
         }
         long endTime = System.nanoTime();
-        err.println("Execution Time : +" + (endTime - startTime) / 1000000 + " ms");
+//        err.println("Execution Time : +" + (endTime - startTime) / 1000000 + " ms");
         exit(0);
     }
 
+    static class Node {
+        Node left;
+        Node right;
+        Node(Node left, Node right) {
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    static int restaurants = 0;
     static void solve() {
 
-        int a = in.nextInt();
-        int b = in.nextInt();
+        int n = in.nextInt();
+        int m = in.nextInt();
+        int[] cats = in.readAllInts(n);
 
-        long t = a;
+        Map<Integer, List<Integer>> adjList = new HashMap();
+        for (int i = 1; i < n; i++) {
+            int x = in.nextInt();
+            int y = in.nextInt();
+            adjList.putIfAbsent(x, new ArrayList<>());
+            adjList.get(x).add(y);
 
-        long dasha = 0, masha = 0;
-        while(true) {
-            if(t % a  == 0 && t % b == 0) {
-                break;
-            } else if(t % a == 0) dasha++;
-            t += a;
+            adjList.putIfAbsent(y, new ArrayList<>());
+            adjList.get(y).add(x);
         }
 
-        t = b;
-        while(true) {
-            if(t % a  == 0 && t % b == 0)
-                break;
-            else if(t % b == 0) masha++;
-            t += b;
+        boolean[] visited = new boolean[n + 1];
+        dfs(adjList, cats, 1, m, 0, visited);
+        System.out.println(restaurants);
+    }
+
+    static void dfs(Map<Integer, List<Integer>> adjList, int[] cats, int node, int m, int catsEncountered, boolean[] visited) {
+
+        visited[node] = true;
+
+        if (cats[node - 1] == 1) catsEncountered++;
+        else catsEncountered = 0;
+
+        if (catsEncountered > m) return;
+
+        if(adjList.get(node).size() == 1 && node != 1) {
+            restaurants++;
+            return;
         }
 
-        if(a > b) dasha++;
-        else masha++;
-
-        if(dasha > masha)
-            out.print("Dasha");
-        else if(masha > dasha)
-            out.print("Masha");
-        else out.print("Equal");
+        for (int n : adjList.get(node)) {
+            if(visited[n]) continue;
+            dfs(adjList, cats, n, m ,catsEncountered, visited);
+        }
 
     }
 
@@ -270,6 +289,16 @@ public class Trains {
                     C[j] = (C[j] + C[j - 1]) % p;
             }
             return C[r];
+        }
+
+        static long binpow(long a, long b, long p) {
+            if (b == 0)
+                return 1;
+            long res = binpow(a, b / 2, p);
+            if (b % 2 == 1)
+                return (((res * res) % p ) * a) % p;
+            else
+                return (res * res) % p;
         }
 
         static long nCr(int n, int r) {
