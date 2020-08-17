@@ -66,7 +66,7 @@ public class RMQ {
                 updateValue(2*node+1,start,mid,idx,val,a);
             }
             else{
-                updateValue(2*node+2,mid+1,end,s,val,a);
+                updateValue(2*node+2,mid+1,end,idx,val,a);
             }
             st[node]=Math.min(st[2*node+1],st[2*node+2]);
         }
