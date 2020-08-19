@@ -1,13 +1,13 @@
-//package atcoder.dp;
+//Comment this line
+package atcoder.dp;
 
 import java.io.*;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class F {
+//Change classname to Main
+public class G {
 
     static BiFunction<Integer, Integer, Integer> ADD = (x, y) -> (x + y);
 
@@ -27,40 +27,45 @@ public class F {
     }
 
     static void solve() {
-        String s1 = in.next();
-        String s2 = in.next();
+        int n = in.nextInt();
+        int m = in.nextInt();
 
-        int m = s1.length();
-        int n = s2.length();
+        Map<Integer, List<Integer>> adj = new HashMap<>();
+        while (m-- > 0) {
+            int x = in.nextInt();
+            int y = in.nextInt();
 
-        int[][] lcs = new int[m + 1][n + 1];
-
-        //Calculate DP matrix for length of common lcs
-        for (int i = 0; i < lcs.length; i++) {
-            for (int j = 0; j < lcs[0].length; j++) {
-                if(i == 0 || j == 0)
-                    lcs[i][j] = 0;
-                else if(s1.charAt(i - 1) == s2.charAt(j - 1))
-                    lcs[i][j] = 1 + lcs[i-1][j-1];
-                else lcs[i][j] = Math.max(lcs[i][j - 1], lcs[i-1][j]);
-            }
+            adj.putIfAbsent(x, new ArrayList<>());
+            adj.get(x).add(y);
         }
 
-        int u = m;
-        int v = n;
+        int[] dp = new int[n + 1];
+        boolean[] visited = new boolean[n + 1];
 
-        StringBuilder res = new StringBuilder();
-        // Finding the actual lcs
-        while(u > 0 && v > 0) {
-            if(s1.charAt(u - 1) == s2.charAt(v - 1)) {
-                res.append(s1.charAt(u-1));
-                u--;
-                v--;
-            } else if (lcs[u - 1][v] > lcs[u][v - 1])
-                u--;
-            else v--;
+        for (int i : adj.keySet()) {
+            if (!visited[i])
+                dfs(dp, visited, adj, i);
         }
-        out.print(res.reverse().toString());
+
+        int max = Integer.MIN_VALUE;
+        for (int i : dp)
+            max = Math.max(max, i);
+
+        out.print(max);
+    }
+
+    static void dfs(int[] dp, boolean[] visited, Map<Integer, List<Integer>> adj, int i) {
+
+        visited[i] = true;
+
+
+        for (int child : adj.getOrDefault(i, new ArrayList<>())) {
+            if(!visited[child])
+                dfs(dp, visited, adj, child);
+
+//          dp[node] = max(dp[node], 1 + max(dp[child1], dp[child2], dp[child3]..))
+            dp[i] = Math.max(dp[i], 1 + dp[child]);
+        }
     }
 
     static void debug(Object... args) {
